@@ -1,4 +1,3 @@
-/* eslint-disable */
 import {
   Flex,
   Text,
@@ -10,8 +9,10 @@ import {
   Stack,
   Textarea,
   Button,
+  useToast,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
-// Custom components
 import Card from "components/card/Card";
 import React, { useMemo, useState } from "react";
 import {
@@ -21,64 +22,70 @@ import {
   useTable,
 } from "react-table";
 import axios from "axios";
+import { Alert, AlertIcon, AlertTitle, AlertDescription } from "@chakra-ui/react"; // Import AlertDescription component
+import AlertPop from "./AlertPop";
 
-export default function DevelopmentTable(props) {
+export default function Form(props) {
   const { columnsData, tableData } = props;
-
-  const columns = useMemo(() => columnsData, [columnsData]);
-  const data = useMemo(() => tableData, [tableData]);
-
+  const toast = useToast();
+  const [formSubmissionData, setFormSubmissionData] = useState(null);
+  const [columns] = useMemo(() => [columnsData], [columnsData]); // Use useMemo with dependency array
   const tableInstance = useTable(
     {
       columns,
-      data,
+      data: tableData,
     },
     useGlobalFilter,
     useSortBy,
     usePagination
   );
-
   const { initialState } = tableInstance;
   initialState.pageSize = 11;
-
   const textColor = useColorModeValue("secondaryGray.900", "white");
-
-  const { log } = console;
-
   const [name, setName] = useState("");
-  const [type, setType] = useState();
-  const [template, setTemplate] = useState();
-
-  log("Name", name);
-  log("type", type);
-  log("template", template);
+  const [type, setType] = useState("");
+  const [template, setTemplate] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    // Check if any of the fields are empty and show an error message
+    if (!name || !type || !template) {
+      toast({
+        title: "Error!",
+        description: "Please fill in all the fields before submitting.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
 
     const teamPayload = {
       name,
       type,
       template,
     };
-
-    log("Payload", teamPayload);
-
-    //send data over the server
-
-    // try {
-    //   const responseData = await axios({
-    //     url: "/api/test.js",
-    //     method: "POST",
-    //     data: teamPayload
-    //   })
-
-    //   log("Response Back ", data)
-    // } catch (error) {
-    //   log("Error: ", error)
-
-    // }
+    try {
+      setIsSubmitting(true);
+      await axios.post("http://localhost:3333/notification", teamPayload);
+      console.log("Form submitted successfully!");
+      setFormSubmissionData(teamPayload);
+      toast({
+        title: "Application submitted!",
+        description: "Thanks for submitting your application. Our team will get back to you soon.",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
   return (
     <Card
       direction="column"
@@ -96,47 +103,58 @@ export default function DevelopmentTable(props) {
         >
           Notification Template
         </Text>
-        {/* <Menu /> */}
       </Flex>
-      <FormControl id="first-name" isRequired p={5}>
-        <FormLabel>Name</FormLabel>
-        <Input
-          placeholder="Name"
-          value={name}
-          onChange={({ target }) => setName(target?.value)}
-          borderRadius="5px"
-        />
-      </FormControl>
-      <FormControl id="country" p={5}>
-        <FormLabel>Type</FormLabel>
-        <Select
-          placeholder="Select the Type"
-          value={type}
-          onChange={({ target }) => setType(target?.value)}
-        >
-          <option>Email</option>
-          <option>SMS</option>
-        </Select>
-      </FormControl>
-      <Stack spacing={3} p={5}>
-        <FormLabel>Enter Your Template</FormLabel>
-        {/* <Input
-            variant="outline"
-            placeholder="Enter Subject"
+      <form method="POST" onSubmit={handleSubmit}>
+        <FormControl id="first-name" isRequired p={5}>
+          <FormLabel>Name</FormLabel>
+          <Input
+            placeholder="Name"
+            value={name}
+            onChange={({ target }) => setName(target?.value)}
             borderRadius="5px"
-            p={5}
-          /> */}
-        <Textarea
-          placeholder="Enter the message"
-          value={template}
-          onChange={({ target }) => setTemplate(target?.value)}
-          boxSize={"lg"}
-          p={5}
-        ></Textarea>
-      </Stack>
-      <Button onClick={handleSubmit} colorScheme="blackAlpha" variant="solid">
-        Create
-      </Button>
+          />
+        </FormControl>
+        <FormControl id="country" p={5}>
+          <FormLabel>Type</FormLabel>
+          <Select
+            placeholder="Select the Type"
+            value={type}
+            onChange={({ target }) => setType(target?.value)}
+          >
+            <option value="EMAIL">Email</option>
+            <option value="SMS">SMS</option>
+          </Select>
+        </FormControl>
+        <FormControl>
+          <Stack spacing={3} p={5}>
+            <FormLabel>Enter Your Template</FormLabel>
+            <Textarea
+              placeholder="Enter the message"
+              value={template}
+              onChange={({ target }) => setTemplate(target?.value)}
+              boxSize={"lg"}
+              p={5}
+            ></Textarea>
+          </Stack>
+        </FormControl>
+        <Button
+          onClick={handleSubmit}
+          colorScheme="blackAlpha"
+          variant="solid"
+          ml={5}
+          pl={5}
+          isLoading={isSubmitting}
+          loadingText="Submitting..."
+        >
+          Create
+        </Button>
+      </form>
+      {formSubmissionData && (
+        <AlertPop
+          title="Application submitted!"
+          description="Thanks for submitting your application. Our team will get back to you soon."
+        />
+      )}
     </Card>
   );
 }
