@@ -118,23 +118,99 @@ export default function ViewTemplate(props) {
         </Select>
       </FormControl>
       <FormControl isDisabled>
-      <Stack spacing={3} p={5}>
-        <FormLabel >Enter Your Template</FormLabel>
-        {/* <Input
-            variant="outline"
-            placeholder="Enter Subject"
-            borderRadius="5px"
+        <Stack spacing={3} p={5}>
+          <FormLabel>Enter Your Template</FormLabel>
+          {/* <Input
+        variant="outline"
+        placeholder="Enter Subject"
+        borderRadius="5px"
+        p={5}
+      /> */}
+          <Textarea
+            placeholder="Enter the message"
+            value={template}
+            onChange={({ target }) => setTemplate(target?.value)}
+            boxSize={"lg"}
             p={5}
-          /> */}
-        <Textarea
-          placeholder="Enter the message"
-          value={template}
-          onChange={({ target }) => setTemplate(target?.value)}
-          boxSize={"lg"}
-          p={5}
-        ></Textarea>
-      </Stack>
+          ></Textarea>
+        </Stack>
       </FormControl>
     </Card>
   );
 }
+// import React from "react";
+// import {
+//   Flex,
+//   Text,
+//   useColorModeValue,
+//   FormControl,
+//   FormLabel,
+//   Select,
+//   Input,
+//   Stack,
+//   Textarea,
+//   Button,
+// } from "@chakra-ui/react";
+// // Custom components
+// import Card from "components/card/Card";
+
+// export default function ViewTemplate() {
+//   return (
+//     <Card
+//       direction="column"
+//       w="100%"
+//       px="0px"
+//       overflowX={{ sm: "scroll", lg: "hidden" }}
+//       p={10}
+//     >
+//       <Flex px="25px" justify="space-between" mb="20px" align="center" p={5}>
+//         <Text
+//           color={textColor}
+//           fontSize="22px"
+//           fontWeight="700"
+//           lineHeight="100%"
+//         >
+//           Notification Template
+//         </Text>
+//       </Flex>
+//       <FormControl id="first-name" isRequired p={5} isDisabled>
+//         <FormLabel>Name</FormLabel>
+//         <Input
+//           placeholder="Name"
+//           value={name}
+//           onChange={({ target }) => setName(target?.value)}
+//           borderRadius="5px"
+//         />
+//       </FormControl>
+//       <FormControl id="country" isDisabled p={5}>
+//         <FormLabel>Type</FormLabel>
+//         <Select
+//           placeholder="Select the Type"
+//           value={type}
+//           onChange={({ target }) => setType(target?.value)}
+//         >
+//           <option>Email</option>
+//           <option>SMS</option>
+//         </Select>
+//       </FormControl>
+//       <FormControl isDisabled>
+//         <Stack spacing={3} p={5}>
+//           <FormLabel>Enter Your Template</FormLabel>
+//           {/* <Input
+//             variant="outline"
+//             placeholder="Enter Subject"
+//             borderRadius="5px"
+//             p={5}
+//           /> */}
+//           <Textarea
+//             placeholder="Enter the message"
+//             value={template}
+//             onChange={({ target }) => setTemplate(target?.value)}
+//             boxSize={"lg"}
+//             p={5}
+//           ></Textarea>
+//         </Stack>
+//       </FormControl>
+//     </Card>
+//   );
+// }
