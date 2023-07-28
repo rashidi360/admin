@@ -10,8 +10,6 @@ import {
   Textarea,
   Button,
   useToast,
-  Wrap,
-  WrapItem,
 } from "@chakra-ui/react";
 import Card from "components/card/Card";
 import React, { useMemo, useState } from "react";
@@ -22,8 +20,7 @@ import {
   useTable,
 } from "react-table";
 import axios from "axios";
-import { Alert, AlertIcon, AlertTitle, AlertDescription } from "@chakra-ui/react"; // Import AlertDescription component
-import AlertPop from "./AlertPop";
+// import AlertPop from "./AlertPop";
 
 export default function Form(props) {
   const { columnsData, tableData } = props;
@@ -50,40 +47,52 @@ export default function Form(props) {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Check if any of the fields are empty and show an error message
-    if (!name || !type || !template) {
+    const statuses = ["success", "error", "warning", "info"];
+    const toastMessagePopup = (title, description, status) => {
       toast({
-        title: "Error!",
-        description: "Please fill in all the fields before submitting.",
-        status: "error",
-        duration: 3000,
+        title: title,
+        description: description,
+        status: status,
+        position: "top",
+        duration: 2000,
         isClosable: true,
       });
-      return;
-    }
+    };
 
     const teamPayload = {
       name,
       type,
       template,
     };
-    try {
-      setIsSubmitting(true);
-      await axios.post("http://localhost:3333/notification", teamPayload);
-      console.log("Form submitted successfully!");
-      setFormSubmissionData(teamPayload);
-      toast({
-        title: "Application submitted!",
-        description: "Thanks for submitting your application. Our team will get back to you soon.",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-    } catch (error) {
-      console.error("Error:", error);
-    } finally {
-      setIsSubmitting(false);
+    if (name && type && template) {
+      try {
+        setIsSubmitting(true);
+        await axios.post("http://localhost:3333/notification", teamPayload);
+        console.log("Form submitted successfully!");
+        setFormSubmissionData(teamPayload);
+        toastMessagePopup(
+          "Application submitted!",
+          "Thanks for submitting your application. Our team will get back to you soon.",
+          statuses[0]
+        );
+      } catch (error) {
+        console.error("Error:", error);
+        // console.log("Form Submitted Failed inside if");
+      } finally {
+        setIsSubmitting(false);
+      }
+    } else {
+      console.log("Form Submitted Failed!");
+      toastMessagePopup(
+        "Application Submission Failed!",
+        "Form Submitted Failed!",
+        statuses[1]
+      );
     }
+    // Reload the page after form submission, regardless of success or failure
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000); // Adjust the delay (in milliseconds) as needed to give the user enough time to see the toast message.
   };
 
   return (
@@ -149,12 +158,12 @@ export default function Form(props) {
           Create
         </Button>
       </form>
-      {formSubmissionData && (
+      {/* {formSubmissionData && (
         <AlertPop
           title="Application submitted!"
           description="Thanks for submitting your application. Our team will get back to you soon."
         />
-      )}
+      )} */}
     </Card>
   );
 }
