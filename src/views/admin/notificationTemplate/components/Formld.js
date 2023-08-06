@@ -1,34 +1,52 @@
-import React from "react";
-import { useState } from "react";
-import axios from "axios";
-
 import {
   Flex,
   Text,
+  useColorModeValue,
   FormControl,
   FormLabel,
-  Input,
   Select,
+  Input,
   Stack,
   Textarea,
   Button,
   useToast,
-  useColorModeValue,
 } from "@chakra-ui/react";
-
 import Card from "components/card/Card";
+import React, { useMemo, useState } from "react";
+import {
+  useGlobalFilter,
+  usePagination,
+  useSortBy,
+  useTable,
+} from "react-table";
+import axios from "axios";
+// import the custom state which was created separatly.
 import CustomUseState from "./CustemUseState";
+// import AlertPop from "./AlertPop";
 
-export default function Form() {
+export default function Form(props) {
+  const { columnsData, tableData } = props;
+  const toast = useToast();
+  const [formSubmissionData, setFormSubmissionData] = useState(null);
+  const [columns] = useMemo(() => [columnsData], [columnsData]); // Use useMemo with dependency array
+  const tableInstance = useTable(
+    {
+      columns,
+      data: tableData,
+    },
+    useGlobalFilter,
+    useSortBy,
+    usePagination
+  );
+  const { initialState } = tableInstance;
+  initialState.pageSize = 11;
+  const textColor = useColorModeValue("secondaryGray.900", "white");
   // const [name, setName] = useState("");
   // const [type, setType] = useState("");
   // const [template, setTemplate] = useState("");
   const { name, setName, type, setType, template, setTemplate } =
     CustomUseState();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const toast = useToast();
-  const [formSubmissionData, setFormSubmissionData] = useState(null);
-  const textColor = useColorModeValue("secondaryGray.900", "white");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -80,6 +98,7 @@ export default function Form() {
       window.location.reload();
     }, 2000); // Adjust the delay (in milliseconds) as needed to give the user enough time to see the toast message.
   };
+
   return (
     <Card
       direction="column"

@@ -25,7 +25,7 @@ const routes = [
     name: "Main Dashboard",
     layout: "/admin",
     path: "/default",
-    icon: <Icon as={MdHome} width='20px' height='20px' color='inherit' />,
+    icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
     component: MainDashboard,
   },
   {
@@ -35,9 +35,9 @@ const routes = [
     icon: (
       <Icon
         as={MdOutlineShoppingCart}
-        width='20px'
-        height='20px'
-        color='inherit'
+        width="20px"
+        height="20px"
+        color="inherit"
       />
     ),
     component: NFTMarketplace,
@@ -46,7 +46,9 @@ const routes = [
   {
     name: "Notification Template",
     layout: "/admin",
-    icon: <Icon as={MdNotifications} width='20px' height='20px' color='inherit' />,
+    icon: (
+      <Icon as={MdNotifications} width="20px" height="20px" color="inherit" />
+    ),
     path: "/notification-template",
     component: NotificationTemplate,
     // Nested routes inside the "Notification Template" route
@@ -56,31 +58,31 @@ const routes = [
         layout: "/admin",
         path: "/view-template",
         // You can set the icon for the nested route as well
-        icon: <Icon as={MdHome} width='20px' height='20px' color='inherit' />,
+        icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
         component: ViewTemplate,
       },
-    ]
+    ],
   },
-  
+
   {
     name: "Profile",
     layout: "/admin",
     path: "/profile",
-    icon: <Icon as={MdPerson} width='20px' height='20px' color='inherit' />,
+    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
     component: Profile,
   },
   {
     name: "Sign In",
     layout: "/auth",
     path: "/sign-in",
-    icon: <Icon as={MdLock} width='20px' height='20px' color='inherit' />,
+    icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
     component: SignInCentered,
   },
   {
     name: "RTL Admin",
     layout: "/rtl",
     path: "/rtl-default",
-    icon: <Icon as={MdHome} width='20px' height='20px' color='inherit' />,
+    icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
     component: RTL,
   },
 ];

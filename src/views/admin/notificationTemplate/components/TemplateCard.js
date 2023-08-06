@@ -1,4 +1,5 @@
-import { Flex, Text, useColorModeValue, Link } from "@chakra-ui/react";
+import { Flex, Text, useColorModeValue } from "@chakra-ui/react";
+import { Link } from "react-router-dom/cjs/react-router-dom.min";
 import React, { useMemo } from "react";
 import {
   useGlobalFilter,
@@ -61,7 +62,7 @@ export default function CheckTable(props) {
           <Link>
             <DeleteIcon />
           </Link>
-          <Link href="view-template">rashid</Link>
+          <Link to="view-template">rashid</Link>
         </Flex>
       </Flex>
       {/* <ViewTemplate /> */}
